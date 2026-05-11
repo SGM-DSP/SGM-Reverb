@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix
+  xmlns="http://wixtoolset.org/schemas/v4/wxs"
+  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+    Name="SGM Reverb"
+    Manufacturer="Sagami"
+    Version="$(var.ProductVersion)"
+    UpgradeCode="837b3df6-0a73-4102-95f5-8a52fe01ccef"
+    Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of SGM Reverb is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="VST3Folder" />
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectRoot)\Installer\License.rtf" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="CompanyFolder" Name="Sagami">
+        <Directory Id="AppInstallFolder" Name="SGM Reverb">
+          <Component Id="StandaloneComponent" Guid="ebb732f0-b310-4e85-a61d-4baee883861d">
+            <File
+              Id="StandaloneExe"
+              Source="$(var.BuildOutput)\Standalone\SGM Reverb.exe"
+              KeyPath="yes" />
+          </Component>
+        </Directory>
+      </Directory>
+
+    </StandardDirectory>
+
+    <StandardDirectory Id="CommonFiles64Folder">
+      <Directory Id="VST3Folder" Name="VST3">
+        <Directory Id="PluginBundleFolder" Name="SGM Reverb.vst3">
+          <Directory Id="PluginContentsFolder" Name="Contents">
+            <Directory Id="PluginResourcesFolder" Name="Resources">
+              <Component Id="Vst3ModuleInfoComponent" Guid="f8b12b9f-2d53-41e7-ac2f-0d158b444cf0">
+                <File
+                  Id="Vst3ModuleInfo"
+                  Source="$(var.BuildOutput)\VST3\SGM Reverb.vst3\Contents\Resources\moduleinfo.json"
+                  KeyPath="yes" />
+              </Component>
+            </Directory>
+
+            <Directory Id="PluginBinaryFolder" Name="x86_64-win">
+              <Component Id="Vst3BinaryComponent" Guid="a8d13fa9-0a9e-4396-8997-11e2c582d34d">
+                <File
+                  Id="Vst3Binary"
+                  Source="$(var.BuildOutput)\VST3\SGM Reverb.vst3\Contents\x86_64-win\SGM Reverb.vst3"
+                  KeyPath="yes" />
+              </Component>
+            </Directory>
+          </Directory>
+        </Directory>
+      </Directory>
+    </StandardDirectory>
+
+    <Feature Id="MainFeature" Title="SGM Reverb" Level="1">
+      <ComponentRef Id="StandaloneComponent" />
+      <ComponentRef Id="Vst3ModuleInfoComponent" />
+      <ComponentRef Id="Vst3BinaryComponent" />
+    </Feature>
+  </Package>
+</Wix>
